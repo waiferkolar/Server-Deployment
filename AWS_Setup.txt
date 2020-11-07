@@ -1,0 +1,130 @@
+1. login to server
+	-> cd ~/.ssh ( go inside .ssh file )
+	-> ssh -i "paukkaying.pem" ubuntu@54.151.135.86 => "PK BK"
+	-> ssh -i "paukkaying.pem" ubuntu@54.151.206.83
+
+	-> if key is too open, solve [ chmod 400 e-commerce.pem ]
+
+2. Nodejs Install 
+	-> sudo apt-get install curl
+	-> curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
+	-> sudo apt-get install nodejs
+
+3. Install Redis 
+	-> sudo apt update
+	-> sudo apt install redis-server
+
+4. Install mongodb
+	Way 1 => 
+		-> sudo apt update
+		-> sudo apt install -y mongodb
+		-> sudo systemctl status mongodb
+
+	Way 2 => 
+		1. Uninstall your mongo completely from your system
+			-> sudo service mongod stop 
+			-> sudo apt-get purge mongodb-org* 
+			-> sudo rm -r /var/log/mongodb 
+			-> sudo rm -r /var/lib/mongodb
+		2. Install mongodb 
+			-> sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
+			-> echo "deb http://repo.mongodb.org/apt/ubuntu "$(lsb_release -sc)"/mongodb-org/3.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.4.list
+			-> sudo apt-get update
+			-> sudo apt-get install -y mongodb-org
+			-> sudo systemctl daemon-reload
+			-> sudo systemctl start mongod
+			-> sudo systemctl enable mongod
+		2.2 (Optional) Install Specific Version
+			-> sudo apt-get install -y mongodb-org=3.6.0 mongodb-org-server=3.6.0 mongodb-org-shell=3.6.0 mongodb-org-mongos=3.6.0 mongodb-org-tools=3.6.0
+
+		3. Configure MongoDB username and password
+			-> export LC_ALL=C
+			-> mongo
+			-> use admin
+			-> db.createUser({user:"coder", pwd:"72@Abc@123!", roles:[{role:"root", db:"admin"}]})
+		4. Restart Mongod
+			-> sudo service mongod restart
+
+5. Mongodb Commands
+	-> show databases
+	-> use Api
+	-> show collections
+	-> db.market.find({})
+	-> db.dropDatabase()
+
+5.1 Make Folder for Project
+	-> move files from one folder to another [ mv  -v /home/ubuntu/app/V1 /home/ubuntu/app ]
+	-> Create file 
+
+6. Run with pm2
+	-> npm install pm2@latest -g
+	-> pm2 start app.js
+	-> pm2 stop app.js
+	-> pm2 restart app.js
+	-> pm2 logs
+	-> pm2 status
+	-> pm2 flush
+	-> pm2 startup unbuntu (reboot => to reboot server)
+
+7. Firewall Freeup
+	-> ufw status
+	-> ufw enable
+	-> ufw allow ssh
+	-> ufw status
+	-> ufw allow http (port 80)
+	-> ufw allow https (port 443)
+
+8. Install nginx
+	-> sudo apt install nginx
+	-> sudo nano /etc/nginx/sites-available/default
+
+	server_name paukkyaing.com www.paukkyaing.com;
+
+    location / {
+        proxy_pass http://localhost:4000; #whatever port your app runs on
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+
+    # Check NGINX config
+	sudo nginx -t
+
+	# Restart NGINX
+	sudo service nginx restart
+
+9. Add SSL with LetsEncrypt
+	sudo add-apt-repository ppa:certbot/certbot
+	sudo apt-get update
+	sudo apt-get install python-certbot-nginx
+	sudo certbot --nginx -d paukkyaing.com -d www.paukkyaing.com
+
+	//no valid ip address error
+	sudo certbot --nginx -d paukkyaing.com -d www.paukkyaing.com
+
+	# Only valid for 90 days, test the renewal process with
+	certbot renew --dry-run
+
+
+pm2 reboot auto restart
+
+
+There were too many requests of a given type :: Error creating new order :: too many failed authorizations recently: see https://letsencrypt.org/docs/rate-limits/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
