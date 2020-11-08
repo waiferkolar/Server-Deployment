@@ -110,7 +110,9 @@
 
 pm2 reboot auto restart
 
-
+10. Node Process exist Error 
+   -> lsof -i tcp:3000
+   -> kill -9 5805 [ 5805 will be return node port from above command ]
 There were too many requests of a given type :: Error creating new order :: too many failed authorizations recently: see https://letsencrypt.org/docs/rate-limits/
 
 
